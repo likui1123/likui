@@ -1,0 +1,32 @@
+//
+// Created by yue on 18-3-16.
+//
+
+#ifndef MAMODEL_H
+#define MAMODEL_H
+
+#include <vector>
+#include "ARMAMath.h"
+using namespace std;
+class MAMoel{
+private:
+	vector<double> data;
+	int p;
+
+public:
+	MAMoel(vector<double> data, int p){
+
+this->data.assign(data.begin(), data.end());
+		this->p = p;
+}
+
+	vector<vector<double> > solveCoeOfMA(){
+vector<vector<double> > vec;
+	ARMAMath ar_math;
+	vector<double>  maCoe(ar_math.computeMACoe(this->data, this->p));
+	vec.push_back(maCoe);
+	return vec;
+
+			}
+};
+#endif //MAMODEL_H

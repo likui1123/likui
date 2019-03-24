@@ -1,0 +1,178 @@
+#include "allocate.h"
+#include <cstring>
+extern int cpu_mem_hard_ph[3];
+
+extern struct FlavorsInfo{
+    vector<string> vflavors;
+    vector<int> cpu_mem_vm[2];
+} flavorsinfo;
+
+struct deploy{
+    int phyid;
+    vector<string> vflavors;
+    vector<int> nums;  //能放置该类型虚拟机个数
+    int cpu_mem_surplus[2];
+    
+};
+
+void allocate_simple(vector<string> vflavors, vector<int> vflavors_pridict_nums, string dim, char* filename)
+{
+    vector<int> vflavors_pridict_nums_copy = vflavors_pridict_nums;
+    vector<struct deploy> deploys;
+    bool flag=0;
+    const char *ss="MEM";
+    const char *gs=dim.substr(0,3).c_str();
+    if(strcmp(ss,gs)==0)
+{
+    flag=1;
+cout<<"desicion MEM"<<endl;
+}
+for( int i=0;i<(int)vflavors.size();i++)
+{
+cout<<"qian:"<<flavorsinfo.vflavors[i]<<" "<<flavorsinfo.cpu_mem_vm[flag][i]<<" "<<vflavors_pridict_nums[i]<<endl;
+}
+   for( int i=0;i<(int)vflavors.size();i++)
+	for( int j=0;j<(int)vflavors.size()-i-1;j++)
+		if(flavorsinfo.cpu_mem_vm[flag][j]>flavorsinfo.cpu_mem_vm[flag][j+1])
+		{
+
+		    int t;
+		    string s;
+		    t=flavorsinfo.cpu_mem_vm[flag][j];
+		    flavorsinfo.cpu_mem_vm[flag][j]=flavorsinfo.cpu_mem_vm[flag][j+1];
+		    flavorsinfo.cpu_mem_vm[flag][j+1]=t;
+
+		    s=flavorsinfo.vflavors[j];
+		    flavorsinfo.vflavors[j]=flavorsinfo.vflavors[j+1];
+		    flavorsinfo.vflavors[j+1]=s;
+
+		    t=flavorsinfo.cpu_mem_vm[!flag][j];
+		    flavorsinfo.cpu_mem_vm[!flag][j]=flavorsinfo.cpu_mem_vm[!flag][j+1];
+		    flavorsinfo.cpu_mem_vm[!flag][j+1]=t;
+			
+		    t=vflavors_pridict_nums[j];
+		    vflavors_pridict_nums[j]=vflavors_pridict_nums[j+1];
+		    vflavors_pridict_nums[j+1]=t;
+		}
+
+ for( int i=0;i<(int)vflavors.size();i++)
+{
+cout<<flavorsinfo.vflavors[i]<<" "<<flavorsinfo.cpu_mem_vm[flag][i]<<" "<<vflavors_pridict_nums[i]<<endl;
+}
+
+
+
+    //open new physical machine
+    struct deploy new_deploy;
+    new_deploy.phyid = deploys.size() + 1;
+    new_deploy.vflavors = flavorsinfo.vflavors;
+    vector<int> nums(flavorsinfo.vflavors.size(), 0);
+    new_deploy.nums = nums;
+    new_deploy.cpu_mem_surplus[0] = cpu_mem_hard_ph[0];
+    new_deploy.cpu_mem_surplus[1] = cpu_mem_hard_ph[1];
+    deploys.push_back(new_deploy);
+
+    for( int i=(int)vflavors.size()-1; i>=0; i--)
+    {
+	//cout<<endl;
+        struct deploy new_deploy = deploys.back();
+        while(vflavors_pridict_nums[i]) //need to be deployed
+        {
+            if(flavorsinfo.cpu_mem_vm[0][i] <= new_deploy.cpu_mem_surplus[0] && flavorsinfo.cpu_mem_vm[1][i] <= new_deploy.cpu_mem_surplus[1]) //has space
+            {
+		//cout<<" surplus:"<< new_deploy.cpu_mem_surplus[1]/1024<<" ";
+                new_deploy.nums[i]++;  //deploy
+                new_deploy.cpu_mem_surplus[0] -= flavorsinfo.cpu_mem_vm[0][i]; //resources substract
+                new_deploy.cpu_mem_surplus[1] -= flavorsinfo.cpu_mem_vm[1][i];
+                vflavors_pridict_nums[i]--;  //vm substract;
+		//cout<<vflavors_pridict_nums[i]<<"  ";
+            }
+            else  //space not enough
+            {
+                int j=i-1;
+                for(; j>=0; j--) //seek for small vm
+                {
+                    if(flavorsinfo.cpu_mem_vm[0][j] <= new_deploy.cpu_mem_surplus[0] && flavorsinfo.cpu_mem_vm[1][j] <= new_deploy.cpu_mem_surplus[1]) //has space
+                    {
+                        new_deploy.nums[j]++;  //deploy
+                        new_deploy.cpu_mem_surplus[0] -= flavorsinfo.cpu_mem_vm[0][j]; //resources substract
+                        new_deploy.cpu_mem_surplus[1] -= flavorsinfo.cpu_mem_vm[1][j];
+                        vflavors_pridict_nums[j]--;  //vm substract;
+		//cout<<"seek for small vm"<<vflavors_pridict_nums[i]<<"  ";
+                        break;  //only got one and break
+                    }
+                }
+
+                if(j>=0) //got a small one
+                {
+                    continue;
+                }
+                else    //the cpu_mem_surplus[2] can not fit any vm
+                {
+                    deploys.erase(deploys.end());
+                    deploys.push_back(new_deploy);  //complete this deploy
+			//cout<<"and open new physical machine"<<endl;
+                    //and open new physical machine
+                    struct deploy new_deploy;
+                    new_deploy.phyid = deploys.size() + 1;
+                    new_deploy.vflavors = flavorsinfo.vflavors;
+                    vector<int> nums(flavorsinfo.vflavors.size(), 0);
+                    new_deploy.nums = nums;
+                    new_deploy.cpu_mem_surplus[0] = cpu_mem_hard_ph[0];
+                    new_deploy.cpu_mem_surplus[1] = cpu_mem_hard_ph[1];
+                    deploys.push_back(new_deploy);
+                    break;
+                }
+
+            }
+        }
+        if(vflavors_pridict_nums[i]==0 || deploys.back().cpu_mem_surplus[0] != cpu_mem_hard_ph[0] || deploys.back().cpu_mem_surplus[1] != cpu_mem_hard_ph[1])
+        {
+            deploys.erase(deploys.end());
+            deploys.push_back(new_deploy);  //complete this deploy
+        }
+        if(vflavors_pridict_nums[i]){
+            i++;  //to be continued...
+        }
+    }
+
+    //OUTPUT
+    string result_file = "";
+    //vm nums
+    int total_vm = accumulate(vflavors_pridict_nums_copy.begin(), vflavors_pridict_nums_copy.end(), 0);
+    char s[20];
+    sprintf(s, "%d", total_vm);
+    result_file.append(s);
+    result_file.append("\n");
+    //vm items
+    for( int i=0; i<(int)vflavors.size(); i++)
+    {
+        char s[20];
+        sprintf(s, "%d", vflavors_pridict_nums_copy[i]);
+        result_file.append(vflavors[i]).append(" ").append(s).append("\n");
+    }
+    result_file.append("\n");
+
+    //deploys
+    sprintf(s, "%d", (int)deploys.size());
+    result_file.append(s).append("\n");
+    for( int i=0; i<(int)deploys.size(); i++)
+    {
+        char s[20];
+        sprintf(s, "%d", deploys[i].phyid);
+        result_file.append(s).append(" ");
+        for( int j=0; j<(int)deploys[i].vflavors.size(); j++)
+        {
+            if(deploys[i].nums[j]) //not 0
+            {
+                result_file.append(deploys[i].vflavors[j]).append(" ");
+                sprintf(s, "%d", deploys[i].nums[j]);
+                result_file.append(s).append(" ");
+            }
+        }
+        result_file.append("\n");
+    }
+
+    cout << result_file;
+    write_result(result_file.c_str(), filename);
+}

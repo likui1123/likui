@@ -1,0 +1,33 @@
+﻿生成启动时间为 2018/03/27 15:31:14。
+     1>项目“H:\ARIMA模型\ARIMA模型\ARIMA模型.vcxproj”在节点 2 上(Rebuild 个目标)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ARMAMath.cpp main.cpp MAModel.cpp
+         MAModel.cpp
+         main.cpp
+     1>h:\arima模型\arima模型\armamodel.h(31): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\armamodel.h(35): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\arimamodel.h(25): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\arimamodel.h(35): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\arimamodel.h(45): warning C4018: “>=”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\arimamodel.h(117): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\arimamodel.h(183): warning C4018: “>=”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\main.cpp(16): warning C4101: “gets”: 未引用的局部变量
+         ARMAMath.cpp
+     1>h:\arima模型\arima模型\armamath.cpp(19): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\armamath.cpp(33): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\armamath.cpp(60): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\armamath.cpp(276): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\armamath.cpp(288): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\armamath.cpp(338): warning C4018: “<”: 有符号/无符号不匹配
+     1>h:\arima模型\arima模型\armamath.cpp(340): warning C4018: “<”: 有符号/无符号不匹配
+         正在生成代码...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"H:\ARIMA模型\Debug\ARIMA模型.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"H:\ARIMA模型\Debug\ARIMA模型.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"H:\ARIMA模型\Debug\ARIMA模型.lib" /MACHINE:X86 Debug\ARMAMath.obj
+         Debug\main.obj
+         Debug\MAModel.obj
+         ARIMA模型.vcxproj -> H:\ARIMA模型\Debug\ARIMA模型.exe
+     1>已完成生成项目“H:\ARIMA模型\ARIMA模型\ARIMA模型.vcxproj”(Rebuild 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:33.24

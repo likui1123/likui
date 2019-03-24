@@ -1,0 +1,37 @@
+#include "ARMAModel.h"
+
+vector<vector<double> > getArmaPara(vector<double> data, int p, int q){
+	vector<vector<double> > vec;
+
+	vector<double> armaCoe(computeARMACoe(data, p, q));
+	vector<double> arCoe(p + 1);
+	for (int i = 0; i<(int)arCoe.size(); i++) arCoe[i] = armaCoe[i];
+
+	vector<double>  maCoe(q + 1);
+
+	for (int i = 0; i<(int)maCoe.size(); i++) {
+		maCoe[i] = armaCoe[i + p + 1];
+	}
+	
+	vec.push_back(arCoe);
+	vec.push_back(maCoe);
+
+	return vec;
+}
+
+vector<vector<double> > getMaPara(vector<double> data, int p, int q){
+	 vector<vector<double> > vec;
+	vector<double>  maCoe(computeMACoe(data, q));
+	vec.push_back(maCoe);
+	return vec;
+
+		}
+
+vector<vector<double> > getArPara(vector<double> data, int p, int q){
+	vector<vector<double> > vec;
+	vector<double>  arCoe(computeARCoe(data, p));
+	vec.push_back(arCoe);
+	return vec;
+}
+
+

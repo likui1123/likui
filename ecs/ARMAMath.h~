@@ -1,0 +1,33 @@
+/*************************************************************************
+> File Name: ARMAMath.h
+> Author: yue
+> Mail:
+> Created Time: 2018年03月15日 星期四 13时44分00秒
+************************************************************************/
+
+#ifndef _ARMAMATH_H
+#define _ARMAMATH_H
+
+#include <vector>
+using namespace std;
+
+	double average(vector<double> ,int);
+	
+	double variance(vector<double> ,int);
+	vector<double>  autocor(vector<double> , int,int );
+
+	//double getModelAIC(vector<vector<double> > , vector<double> , int,int );
+	vector<double> aicCheck(vector<vector<double> > , vector<double> , int,int );
+
+	std::vector<vector<double> > LevinsonSolve(vector<double> );
+	vector<double> getParaAr(vector<double> , int,int,int,int );
+	vector<double> getParaMa(vector<double> , int );
+	vector<double> getParaMarm(vector<double> , int , int );
+	vector<vector<double>> optiData(vector<double> gar,int o,int t);
+
+
+
+
+
+#endif
+
